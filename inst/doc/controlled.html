@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>How the dea_controlled file was made.</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      code.sourceCode > span { display: inline-block; line-height: 1.25; }
+  code.sourceCode > span { color: inherit; text-decoration: inherit; }
+  code.sourceCode > span:empty { height: 1.2em; }
+  .sourceCode { overflow: visible; }
+  code.sourceCode { white-space: pre; position: relative; }
+  div.sourceCode { margin: 1em 0; }
+  pre.sourceCode { margin: 0; }
+  @media screen {
+  div.sourceCode { overflow: auto; }
+  }
+  @media print {
+  code.sourceCode { white-space: pre-wrap; }
+  code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+  }
+  pre.numberSource code
+    { counter-reset: source-line 0; }
+  pre.numberSource code > span
+    { position: relative; left: -4em; counter-increment: source-line; }
+  pre.numberSource code > span > a:first-child::before
+    { content: counter(source-line);
+      position: relative; left: -1em; text-align: right; vertical-align: baseline;
+      border: none; display: inline-block;
+      -webkit-touch-callout: none; -webkit-user-select: none;
+      -khtml-user-select: none; -moz-user-select: none;
+      -ms-user-select: none; user-select: none;
+      padding: 0 4px; width: 4em;
+      color: #aaaaaa;
+    }
+  pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+  div.sourceCode
+    {   }
+  @media screen {
+  code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+  }
+  code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+  code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+  code span.at { color: #7d9029; } /* Attribute */
+  code span.bn { color: #40a070; } /* BaseN */
+  code span.bu { } /* BuiltIn */
+  code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+  code span.ch { color: #4070a0; } /* Char */
+  code span.cn { color: #880000; } /* Constant */
+  code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+  code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+  code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+  code span.dt { color: #902000; } /* DataType */
+  code span.dv { color: #40a070; } /* DecVal */
+  code span.er { color: #ff0000; font-weight: bold; } /* Error */
+  code span.ex { } /* Extension */
+  code span.fl { color: #40a070; } /* Float */
+  code span.fu { color: #06287e; } /* Function */
+  code span.im { } /* Import */
+  code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+  code span.op { color: #666666; } /* Operator */
+  code span.ot { color: #007020; } /* Other */
+  code span.pp { color: #bc7a00; } /* Preprocessor */
+  code span.sc { color: #4070a0; } /* SpecialChar */
+  code span.ss { color: #bb6688; } /* SpecialString */
+  code span.st { color: #4070a0; } /* String */
+  code span.va { color: #19177c; } /* Variable */
+  code span.vs { color: #4070a0; } /* VerbatimString */
+  code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">How the dea_controlled file was made.</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(DOPE)</span></code></pre></div>
+<p>c_cs_alpha.pdf downloaded <a href="https://www.deadiversion.usdoj.gov/schedules/orangebook/c_cs_alpha.pdf" class="uri">https://www.deadiversion.usdoj.gov/schedules/orangebook/c_cs_alpha.pdf</a> 2020-09-08</p>
+<p>The text file, c_cs_alpha.txt, was opened with UltraEdit and edited to remove headers and the data were aligned to match the drug number column. That manual editing to remove the headers should be done programmatically (perhaps with a package that emulates PERL). Aligning of the drug number column is a major coding task given the structure of the data.</p>
+<p>That file was opened in Excel to spit into columns. This should be redone in R.</p>
+<table>
+<thead>
+<tr class="header">
+<th>What</th>
+<th>Column</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Substance</td>
+<td>1-59</td>
+</tr>
+<tr class="even">
+<td>DEA Number</td>
+<td>60-62</td>
+</tr>
+<tr class="odd">
+<td>CSA Schedule</td>
+<td>63-71</td>
+</tr>
+<tr class="even">
+<td>Narcotic</td>
+<td>72</td>
+</tr>
+<tr class="odd">
+<td>Other Names</td>
+<td>73+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(readxl)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>controlled &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;../inst/extdata/c_cs_alpha.xlsx&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">library</span>(conflicted)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">suppressMessages</span>(<span class="kw">conflict_prefer</span>(<span class="st">&quot;filter&quot;</span>, <span class="st">&quot;dplyr&quot;</span>))</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(dplyr))</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="kw">library</span>(stringr)  <span class="co"># str_count &amp; str_detect</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="kw">library</span>(tidyr)  <span class="co"># separate</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="kw">library</span>(readr)  <span class="co"># write_csv</span></span></code></pre></div>
+<div id="mark-names-that-will-be-diffcult-to-parse" class="section level1">
+<h1>Mark names that will be diffcult to parse</h1>
+<p>The Names column can have many different synonyms for a drug (street and/or brand). I am marking names records that have an open parenthisis <code>(</code> or a comma followed by something other than a space as being difficult to parse.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>new &lt;-<span class="st"> </span>controlled <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">difficult =</span> <span class="kw">str_count</span>(Names, <span class="st">&quot;[(]&quot;</span>) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="st">           </span><span class="kw">str_detect</span>(controlled<span class="op">$</span>Names, <span class="st">&quot;,(?=</span><span class="ch">\\</span><span class="st">S)&quot;</span>))</span></code></pre></div>
+</div>
+<div id="difficult-synonyms" class="section level1">
+<h1><em>Difficult</em> synonyms</h1>
+<p>Here the difficult names are exported to a text file and then parsed by to separate names with semi-colons. Check the git history for a partial solution that automated this for specific types complexities.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># filtered rows where synonyms are &quot;difficult&quot;</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>difficult &lt;-<span class="st"> </span>new <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="st">  </span><span class="kw">filter</span>(difficult <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>)</span>
+<span id="cb5-4"><a href="#cb5-4"></a></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co"># created an text file (CSV) for all rows with &quot;difficult&quot; synonyms</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="co"># difficult %&gt;% </span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co"># select(- difficult) %&gt;% </span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#  write_csv(&quot;../inst/extdata/Difficult.csv&quot;)</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="co"># for the &#39;difficult&#39; synonyms, I plan to split by semicolon</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="co"># prepped csv file for splitting synonyms via semicolon</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a>synonyms_edited &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;../inst/extdata/Difficult_Edited.csv&quot;</span>)</span>
+<span id="cb5-13"><a href="#cb5-13"></a></span>
+<span id="cb5-14"><a href="#cb5-14"></a><span class="co"># data set of difficult synonyms, all split by semicolon</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a>synonyms_difficult &lt;-<span class="st"> </span></span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="st">  </span>synonyms_edited <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-17"><a href="#cb5-17"></a><span class="st">  </span><span class="kw">separate</span>(</span>
+<span id="cb5-18"><a href="#cb5-18"></a>    Names, </span>
+<span id="cb5-19"><a href="#cb5-19"></a>    <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;n_1&quot;</span>, <span class="st">&quot;n_2&quot;</span>, <span class="st">&quot;n_3&quot;</span>, <span class="st">&quot;n_4&quot;</span>, <span class="st">&quot;n_5&quot;</span>, <span class="st">&quot;n_6&quot;</span>, <span class="st">&quot;n_7&quot;</span>, <span class="st">&quot;n_8&quot;</span>, <span class="st">&quot;n_9&quot;</span>), </span>
+<span id="cb5-20"><a href="#cb5-20"></a>    <span class="dt">extra =</span> <span class="st">&quot;drop&quot;</span>, </span>
+<span id="cb5-21"><a href="#cb5-21"></a>    <span class="dt">fill =</span> <span class="st">&quot;right&quot;</span>, </span>
+<span id="cb5-22"><a href="#cb5-22"></a>    <span class="dt">sep =</span> <span class="st">&quot;[;]&quot;</span>, </span>
+<span id="cb5-23"><a href="#cb5-23"></a>    <span class="dt">remove =</span> <span class="ot">FALSE</span></span>
+<span id="cb5-24"><a href="#cb5-24"></a>    ) <span class="op">%&gt;%</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">everything</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-26"><a href="#cb5-26"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;n_&quot;</span>), <span class="op">~</span><span class="kw">str_trim</span>(.x))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-27"><a href="#cb5-27"></a><span class="st">  </span><span class="kw">pivot_longer</span>(</span>
+<span id="cb5-28"><a href="#cb5-28"></a>    <span class="dt">cols =</span> <span class="kw">starts_with</span>(<span class="st">&quot;n_&quot;</span>), </span>
+<span id="cb5-29"><a href="#cb5-29"></a>    <span class="dt">values_to =</span> <span class="st">&quot;synonym&quot;</span>, </span>
+<span id="cb5-30"><a href="#cb5-30"></a>    <span class="dt">values_drop_na =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-31"><a href="#cb5-31"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(name, Names)) <span class="op">%&gt;%</span></span>
+<span id="cb5-32"><a href="#cb5-32"></a><span class="st">  </span><span class="kw">filter</span>(synonym <span class="op">!=</span><span class="st"> &#39;&#39;</span>) </span></code></pre></div>
+</div>
+<div id="easy-synonyms" class="section level1">
+<h1><em>Easy</em> synonyms</h1>
+<p>A few of the “easy” synonyms had conjunctions (and/or) or commas without spaces.</p>
+<p>For the ‘easy’ synonyms, I plan to split by comma. Below are the records which need modification:</p>
+<ul>
+<li>row #6: change semicolon to comma</li>
+<li>row #58: remove “has been sold as Ecstasy, i.e.”</li>
+<li>row #64: change semicolon to comma</li>
+<li>row #247: replace “and” with a comma</li>
+<li>row #274: replace “and” with a comma</li>
+<li>row #328: replace “or” with a comma</li>
+<li>row #376: remove comma after synonym name</li>
+<li>row #378: change semicolon to comma</li>
+<li>row #422: replace “and” with a comma</li>
+<li>row #423: replace “and” with a comma</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># filtered rows where synonyms are NOT &quot;difficult&quot;</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>easy &lt;-<span class="st"> </span>new <span class="op">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw">filter</span>(difficult <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">NA</span>))</span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co"># made the comma replacements and created a dataset for each type of </span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="co"># transformation, with the final result being a comma</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co"># change semicolon to comma</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a>semi_is_gone &lt;-<span class="st"> </span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="st">  </span>easy <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="st">  </span><span class="kw">slice</span>(<span class="dv">6</span>, <span class="dv">64</span>, <span class="dv">80</span>, <span class="dv">378</span>) <span class="op">%&gt;%</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Names =</span> <span class="kw">str_replace_all</span>(Names, <span class="st">&quot;;&quot;</span>, <span class="st">&quot;,&quot;</span>))</span>
+<span id="cb6-13"><a href="#cb6-13"></a></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="co"># replace &quot;and&quot; with comma</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a>and_is_gone &lt;-</span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="st">  </span>easy <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="st">  </span><span class="kw">slice</span>(<span class="dv">79</span>, <span class="dv">120</span>, <span class="dv">247</span>, <span class="dv">274</span>, <span class="dv">422</span>, <span class="dv">423</span>) <span class="op">%&gt;%</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Names =</span> <span class="kw">str_replace_all</span>(Names, <span class="st">&quot; and&quot;</span>, <span class="st">&quot;,&quot;</span>))</span>
+<span id="cb6-19"><a href="#cb6-19"></a></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="co"># remove the phrase involving ecstasy</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a>ecstasy_is_gone &lt;-</span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="st">  </span>easy <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-23"><a href="#cb6-23"></a><span class="st">  </span><span class="kw">slice</span>(<span class="dv">58</span>) <span class="op">%&gt;%</span></span>
+<span id="cb6-24"><a href="#cb6-24"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Names =</span> <span class="kw">str_remove_all</span>(Names, <span class="st">&quot; has been sold as Ecstasy, i.e.&quot;</span>))</span>
+<span id="cb6-25"><a href="#cb6-25"></a></span>
+<span id="cb6-26"><a href="#cb6-26"></a><span class="co"># remove comma after synonym</span></span>
+<span id="cb6-27"><a href="#cb6-27"></a>extra_comma_is_gone &lt;-</span>
+<span id="cb6-28"><a href="#cb6-28"></a><span class="st">  </span>easy <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-29"><a href="#cb6-29"></a><span class="st">  </span><span class="kw">slice</span>(<span class="dv">376</span>) <span class="op">%&gt;%</span></span>
+<span id="cb6-30"><a href="#cb6-30"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Names =</span> <span class="kw">str_remove_all</span>(Names, <span class="st">&quot;,&quot;</span>))</span>
+<span id="cb6-31"><a href="#cb6-31"></a></span>
+<span id="cb6-32"><a href="#cb6-32"></a><span class="co"># replace &quot;or&quot; with comma</span></span>
+<span id="cb6-33"><a href="#cb6-33"></a>or_is_gone &lt;-</span>
+<span id="cb6-34"><a href="#cb6-34"></a><span class="st">  </span>easy <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-35"><a href="#cb6-35"></a><span class="st">  </span><span class="kw">slice</span>(<span class="dv">328</span>) <span class="op">%&gt;%</span></span>
+<span id="cb6-36"><a href="#cb6-36"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Names =</span> <span class="kw">str_replace_all</span>(Names, <span class="st">&quot; or&quot;</span>, <span class="st">&quot;,&quot;</span>))</span>
+<span id="cb6-37"><a href="#cb6-37"></a></span>
+<span id="cb6-38"><a href="#cb6-38"></a><span class="co"># dataset of rows that did NOT require a comma change </span></span>
+<span id="cb6-39"><a href="#cb6-39"></a><span class="co">#  (i.e. I left them the way they are)  </span></span>
+<span id="cb6-40"><a href="#cb6-40"></a>easy_nochanges &lt;-</span>
+<span id="cb6-41"><a href="#cb6-41"></a><span class="st">  </span>easy <span class="op">%&gt;%</span></span>
+<span id="cb6-42"><a href="#cb6-42"></a><span class="st">  </span><span class="kw">slice</span>(<span class="op">-</span><span class="dv">6</span>, <span class="dv">-58</span>, <span class="dv">-64</span>, <span class="dv">-79</span>, <span class="dv">-80</span>, <span class="dv">-120</span>, <span class="dv">-247</span>, <span class="dv">-274</span>, <span class="dv">-328</span>, <span class="dv">-376</span>, <span class="dv">-378</span>, <span class="dv">-422</span>, <span class="dv">-423</span>)</span>
+<span id="cb6-43"><a href="#cb6-43"></a></span>
+<span id="cb6-44"><a href="#cb6-44"></a><span class="co"># bind rows that required a comma change and rows that didn&#39;t </span></span>
+<span id="cb6-45"><a href="#cb6-45"></a><span class="co"># now the data is ready to be split by comma </span></span>
+<span id="cb6-46"><a href="#cb6-46"></a>synonyms_easy_prep &lt;-</span>
+<span id="cb6-47"><a href="#cb6-47"></a><span class="st">  </span><span class="kw">bind_rows</span>(</span>
+<span id="cb6-48"><a href="#cb6-48"></a>    semi_is_gone,</span>
+<span id="cb6-49"><a href="#cb6-49"></a>    and_is_gone,</span>
+<span id="cb6-50"><a href="#cb6-50"></a>    ecstasy_is_gone,</span>
+<span id="cb6-51"><a href="#cb6-51"></a>    extra_comma_is_gone,</span>
+<span id="cb6-52"><a href="#cb6-52"></a>    or_is_gone,</span>
+<span id="cb6-53"><a href="#cb6-53"></a>    easy_nochanges</span>
+<span id="cb6-54"><a href="#cb6-54"></a>  )</span>
+<span id="cb6-55"><a href="#cb6-55"></a></span>
+<span id="cb6-56"><a href="#cb6-56"></a><span class="co"># dataset of easy synonyms, all split by comma</span></span>
+<span id="cb6-57"><a href="#cb6-57"></a>synonyms_easy &lt;-</span>
+<span id="cb6-58"><a href="#cb6-58"></a><span class="st">  </span>synonyms_easy_prep <span class="op">%&gt;%</span></span>
+<span id="cb6-59"><a href="#cb6-59"></a><span class="st">  </span><span class="co"># move the comma separated names into their own columns. </span></span>
+<span id="cb6-60"><a href="#cb6-60"></a><span class="st">  </span><span class="co">#   mine new columns are enough to hold the drugs with MANY synonyms.</span></span>
+<span id="cb6-61"><a href="#cb6-61"></a><span class="st">  </span><span class="kw">separate</span>(</span>
+<span id="cb6-62"><a href="#cb6-62"></a>    Names, </span>
+<span id="cb6-63"><a href="#cb6-63"></a>    <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;n_1&quot;</span>, <span class="st">&quot;n_2&quot;</span>, <span class="st">&quot;n_3&quot;</span>, <span class="st">&quot;n_4&quot;</span>, <span class="st">&quot;n_5&quot;</span>, <span class="st">&quot;n_6&quot;</span>, <span class="st">&quot;n_7&quot;</span>, <span class="st">&quot;n_8&quot;</span>, <span class="st">&quot;n_9&quot;</span>), </span>
+<span id="cb6-64"><a href="#cb6-64"></a>    <span class="dt">extra =</span> <span class="st">&quot;drop&quot;</span>, </span>
+<span id="cb6-65"><a href="#cb6-65"></a>    <span class="dt">fill =</span> <span class="st">&quot;right&quot;</span>, </span>
+<span id="cb6-66"><a href="#cb6-66"></a>    <span class="dt">sep =</span> <span class="st">&quot;[,]&quot;</span>, </span>
+<span id="cb6-67"><a href="#cb6-67"></a>    <span class="dt">remove =</span> <span class="ot">FALSE</span></span>
+<span id="cb6-68"><a href="#cb6-68"></a>    ) <span class="op">%&gt;%</span></span>
+<span id="cb6-69"><a href="#cb6-69"></a><span class="st">  </span><span class="co"># remove extra spaces for all the newly created variables</span></span>
+<span id="cb6-70"><a href="#cb6-70"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;n_&quot;</span>), <span class="op">~</span><span class="kw">str_trim</span>(.x))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-71"><a href="#cb6-71"></a><span class="st">  </span><span class="co"># make the dataset long</span></span>
+<span id="cb6-72"><a href="#cb6-72"></a><span class="st">  </span><span class="kw">pivot_longer</span>(</span>
+<span id="cb6-73"><a href="#cb6-73"></a>    <span class="dt">cols =</span> <span class="kw">starts_with</span>(<span class="st">&quot;n_&quot;</span>), </span>
+<span id="cb6-74"><a href="#cb6-74"></a>    <span class="dt">values_to =</span> <span class="st">&quot;synonym&quot;</span>, </span>
+<span id="cb6-75"><a href="#cb6-75"></a>    <span class="dt">values_drop_na =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-76"><a href="#cb6-76"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(name, Names, difficult)) <span class="op">%&gt;%</span></span>
+<span id="cb6-77"><a href="#cb6-77"></a><span class="st">  </span><span class="co"># get of any blank name columns</span></span>
+<span id="cb6-78"><a href="#cb6-78"></a><span class="st">  </span><span class="kw">filter</span>(synonym <span class="op">!=</span><span class="st"> &#39;&#39;</span>) </span></code></pre></div>
+</div>
+<div id="bind-the-easy-and-difficult-synonym-datasets-to-create-the-final-dataset" class="section level1">
+<h1>bind the ‘easy’ and ‘difficult’ synonym datasets to create the final dataset</h1>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>dea_controlled &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(synonyms_difficult, synonyms_easy) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">synonym =</span> <span class="kw">if_else</span>(synonym <span class="op">==</span><span class="st"> &quot;Soneryl (UK)&quot;</span>, <span class="st">&quot;Soneryl&quot;</span>, synonym))  <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="st">  </span><span class="kw">rename</span>(<span class="st">&quot;substance&quot;</span> =<span class="st"> </span>SUBSTANCE) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="st">  </span><span class="kw">rename</span>(<span class="st">&quot;number&quot;</span> =<span class="st"> </span>Number)  <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="st">  </span><span class="kw">rename</span>(<span class="st">&quot;schedule&quot;</span> =<span class="st"> </span>Schedule)  <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="st">  </span><span class="kw">rename</span>(<span class="st">&quot;narcotic&quot;</span> =<span class="st"> </span>Narcotic)  </span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a>usethis<span class="op">::</span><span class="kw">use_data</span>(dea_controlled, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
