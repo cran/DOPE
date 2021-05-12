@@ -17,9 +17,9 @@ knitr::opts_chunk$set(
 #  library(readr)  # read_delm
 #  
 #  s <- read_delim("../inst/extdata/slangUE.txt", "~", escape_double = FALSE,
-#                  col_names = c("class", "brand", "slang"),
+#                  col_names = c("category", "brand", "slang"),
 #                  col_types = cols(
-#                    class = col_character(),
+#                    category = col_character(),
 #                    brand = col_character(),
 #                    slang = col_character()),
 #                    trim_ws = TRUE)

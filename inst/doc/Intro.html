@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
   div.column{display: inline-block; vertical-align: top; width: 50%;}
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
-      </style>
+    </style>
+
 
 
 
@@ -242,83 +243,80 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="dea" class="section level1">
 <h1>DEA</h1>
-<p>This is a summary of the the drugs on the DEA website. It include drug category (i.e., stimulants, depressants, hallucinogens), classes (i.e., amphetamines, cocaine, barbiturates) and drug synonyms. Synonyms include brand/generic names (Adderall®, Vallium®, clonazepam) and street names (Apache, White Girl). Eventually the ontology needs to be expanded to add a grouping variable for related synonyms. For example, the generic clonazepam, the brand name Klonopin® and the street name <em>k-pin</em> all should be grouped with the general name clonazepam</p>
+<p>This is a summary of the the drugs on the DEA website. It include drug class (i.e., stimulants, depressants, hallucinogens), categories (i.e., amphetamines, cocaine, barbiturates) and drug synonyms. Synonyms include brand/generic names (Adderall®, Vallium®, clonazepam) and street names (Apache, White Girl). Eventually the ontology needs to be expanded to add a grouping variable for related synonyms. For example, the generic clonazepam, the brand name Klonopin® and the street name <em>k-pin</em> all should be grouped with the general name clonazepam</p>
 <div id="web-scrape" class="section level2">
 <h2>Web Scrape</h2>
-<p>Two files, <em>dea_factsheets.rda</em> and <em>dea_brands.rda</em>, were created by scraping the “fact sheets” on the DEA website on September 10th 2020. The fact had 12 records added because the DEA slang file has additional “classes” (e.g., crack cocaine, mushrooms, PCP, etc.). These extra “classes” are problematic for the DEA ontology because they also include a specific brand name (i.e., ritalin) and two benzodiazepines (i.e., alprazolam, clonazepam). Eventually these need to be added as part of a “generic name” level in the ontology.</p>
-<div id="fact-sheets" class="section level3">
-<h3>Fact Sheets</h3>
+<p>Two files, <em>dea_factsheets.rda</em> and <em>dea_brands.rda</em>, were created by scraping the “fact sheets” on the DEA website on September 10th 2020. The fact had 12 records added because the DEA slang file has additional “categories” (e.g., crack cocaine, mushrooms, PCP, etc.). These extra “categories” are problematic for the DEA ontology because they also include a specific brand name (i.e., ritalin) and two benzodiazepines (i.e., alprazolam, clonazepam). Eventually these need to be added as part of a “generic name” level in the ontology.</p>
+</div>
+<div id="fact-sheets" class="section level2">
+<h2>Fact Sheets</h2>
 <ul>
-<li><em>dea_factsheets.rda</em> (N = 41 records) has 11 drug categories and 41 classes (e.g., PCP, acetaminophen and oxycodone, etc.). One extra category “benzodiazepine” was added because it is a grouping category in the DEA slang file.</li>
+<li><em>dea_factsheets.rda</em> (N = 29 records) has 10 drug classes and 29 categories (e.g., amphetamines, barbiturates, etc.). One extra class “benzodiazepine” was added because it is a grouping class in the DEA slang file.</li>
 </ul>
 <table>
 <thead>
 <tr class="header">
-<th align="left">Category</th>
+<th align="left">Class</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">benzodiazepine</td>
-</tr>
-<tr class="even">
 <td align="left">cannabis</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">depressants</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">designer drugs</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">drugs of concern</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">hallucinogen</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">heroin</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">inhalant</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">narcotics (opioids)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">steroids</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">stimulants</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="drug-brands" class="section level3">
-<h3>Drug Brands</h3>
+<div id="drug-brands" class="section level2">
+<h2>Drug Brands</h2>
 <ul>
-<li><em>dea_brands.rda</em> (N = 28 records) has 8 drug classes (e.g., amphetamines, barbiturates, benzodiazepines, etc.) and 28 brands (e.g., Adderall®, Concerta®, etc.)</li>
+<li><em>dea_brands.rda</em> (N = 28 records) has 8 drug categories (e.g., amphetamines, barbiturates, benzodiazepines, etc.) and 28 brands (e.g., Adderall®, Concerta®, etc.)</li>
 </ul>
-</div>
 </div>
 <div id="pdfs" class="section level2">
 <h2>PDFs</h2>
 <p>Two pdfs, with slang<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> and controlled substances<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> were download and processed to make <em>slang.rda</em> and <em>controlled.rda</em>.</p>
-<div id="slang" class="section level3">
-<h3>Slang</h3>
+</div>
+<div id="slang" class="section level2">
+<h2>Slang</h2>
 <ul>
-<li><p><em>dea_street_names.rda</em> (N = 1731 records) contains 26 drug classes and 3 brands (e.g., Klonopin, Percocet, Xanax).</p>
+<li><p><em>dea_street_names.rda</em> (N = 1731 records) contains 26 drug categories and 3 brands (e.g., Klonopin, Percocet, Xanax).</p>
 <ul>
-<li>Note Percocet® is here as a class but it is not in the scraped files.<br />
-</li>
-<li>Several extra classes are in the slang file including: Hydrocodone, Crack Cocaine, Marijana Concentrates, PCP and Promethazine with Codeine.</li>
+<li>Note Percocet® is here as a category but it is not in the scraped files.</li>
+<li>Several extra categories are in the slang file including: Hydrocodone, Crack Cocaine, Marijana Concentrates, PCP and Promethazine with Codeine.</li>
 <li>Discrepancies, relative to the fact sheets, include <em>psilocybin</em> listed as <em>Mushrooms</em>, <em>bath salts</em> listed as <em>Synthetic Cathinones</em>, <em>synthetic marijuana</em> listed as <em>Synthetic Cannabinoids</em>.</li>
 <li>There are dpulicate terms (e.g., Ace, Alice, Azucar)</li>
 </ul></li>
 </ul>
 </div>
-<div id="controlled-substances" class="section level3">
-<h3>Controlled Substances</h3>
+<div id="controlled-substances" class="section level2">
+<h2>Controlled Substances</h2>
 <ul>
 <li><em>dea_controlled.rda</em> (N = 732 records) has these variables
 <ul>
@@ -330,7 +328,6 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </ul></li>
 </ul>
 <p>Parsing the <code>SUBSTANCES</code> and <code>names</code> variables will be very difficult because the delimiters between drugs are not at all consistent.</p>
-</div>
 </div>
 <div id="dea-summary" class="section level2">
 <h2>DEA Summary</h2>
@@ -353,6 +350,14 @@ Figure 1 shows the DEA website drug ontology. Problematic entries shown with a r
 <li><em>noslang_street_names.rda</em> has 3216 drug related terms.</li>
 </ul>
 </div>
+</div>
+<div id="iqvia" class="section level1">
+<h1>IQVIA</h1>
+<p>Additional drugs found while processing data from IQVIA. Thanks to Edward Nunes M.D. for providing notes on how to better classify these drugs. This data introduced new classes such as reversal agents and treatment drugs.</p>
+</div>
+<div id="drug_stop_words.rda" class="section level1">
+<h1><code>drug_stop_words.rda</code></h1>
+<p>This is a vector of drug-specific stop words that have been observed while processing data from the aforementioned data sources. This vector is primarily used with the <code>parse()</code> function and is used to remove irrelevant words (i.e., “pills”, “syringe”) or strings such as units or dosages of drugs (i.e., “mg”).</p>
 </div>
 <div class="footnotes">
 <hr />

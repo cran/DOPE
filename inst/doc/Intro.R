@@ -17,23 +17,23 @@ data(dea_factsheets)
 
 #load("../../data/dea_factsheets.rda")
 
-category <- unique(dea_factsheets$category)
+class <- unique(dea_factsheets$class)
 
-# category
+# class
 
-class <- dea_factsheets %>% 
-  arrange(class) %>% 
-  # filter(class == "steroids") %>% 
-  select(class)
-  
+category <- dea_factsheets %>%
+  arrange(category) %>%
+  # filter(category == "steroids") %>%
+  select(category)
+
 
 #load("../../data/dea_brands.rda")
 
-class2 <- unique(dea_brands$class)
+category2 <- unique(dea_brands$category)
 
-brands <- dea_brands %>% 
-  arrange(class) %>% 
-  #filter(type == "oxycodone") %>% 
+brands <- dea_brands %>%
+  arrange(category) %>%
+  #filter(type == "oxycodone") %>%
   pull(brands)
 
 #load("../../data/dea_controlled.rda")
@@ -42,18 +42,18 @@ brands <- dea_brands %>%
 
 
 #unique(slang$brand)
-#unique(slang$Class)
+#unique(slang$Category)
 
-duplicates <- dea_street_names %>% 
-  group_by(slang) %>% 
-  filter(n() > 1) %>% 
+duplicates <- dea_street_names %>%
+  group_by(slang) %>%
+  filter(n() > 1) %>%
   arrange(slang)
 
 # unique(duplicates)
 
 ## -----------------------------------------------------------------------------
-sort(category) %>% 
-  knitr::kable(col.names = "Category")
+sort(class) %>%
+  knitr::kable(col.names = "Class")
 
 ## ---- cache=FALSE, echo=FALSE, fig.align="center", fig.cap="Figure 1 shows the DEA website drug ontology. Problematic entries shown with a red callout.", out.width="100%"----
 knitr::include_graphics("../inst/extdata/Drugs.jpg", error = FALSE)

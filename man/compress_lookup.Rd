@@ -6,29 +6,28 @@
 \usage{
 compress_lookup(
   lookupTable,
-  compressCategory = FALSE,
+  compressOriginalWord = FALSE,
   compressClass = FALSE,
-  compressSynonym = TRUE,
-  sortOutput = FALSE
+  compressCategory = FALSE,
+  compressSynonym = TRUE
 )
 }
 \arguments{
-\item{lookupTable}{A lookup table with class \code{data.frame} having three
-columns: drug category, drug class, and drug street name. These tables are
+\item{lookupTable}{A lookup table with category \code{data.frame} having three
+columns: drug class, drug category, and drug street name. These tables are
 returned by the function \code{\link{lookup}}.}
 
-\item{compressCategory}{Should the drug category be collapsed? Defaults to
+\item{compressOriginalWord}{Should the search word(s) be collapsed? Defaults to
 \code{FALSE}.}
 
 \item{compressClass}{Should the drug class be collapsed? Defaults to
 \code{FALSE}.}
 
+\item{compressCategory}{Should the drug category be collapsed? Defaults to
+\code{FALSE}.}
+
 \item{compressSynonym}{Should the drug synonym / street name be collapsed?
 Defaults to \code{TRUE}.}
-
-\item{sortOutput}{Sort alphabetically rows of the returned table. Defaults
-to FALSE (maintaining the row order of the original \code{lookupTable}
-object).}
 }
 \value{
 A compressed lookup table, with unwanted columns removed.
@@ -40,5 +39,5 @@ Given a Drug Lookup table as returned by the function
 \examples{
   longExampleTable <- lookup("dope", "methamphetamine")
   compress_lookup(longExampleTable)
-  compress_lookup(longExampleTable, compressClass = TRUE)
+  compress_lookup(longExampleTable, compressCategory = TRUE)
 }

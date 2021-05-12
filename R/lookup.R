@@ -1,55 +1,80 @@
 
-#' Make a table with the category and class for a drug name
+#' Make a table with the class and category for a drug name
 #'
-#' @description This function provides a table with drug category and class
+#' @description This function provides a table with drug class and category
 #'   information all of the known drugs.
 #'
-#' @param ... multiple strings holding possible possible drug names
-#' @param searchCategory Should the substances listed in \code{...} be searched
-#'   for in column \code{category}? Defaults to TRUE.
+#' @param drug_vec a vector of strings holding possible drug names
+#' @param ... multiple strings holding possible drug names
 #' @param searchClass Should the substances listed in \code{...} be searched
 #'   for in column \code{class}? Defaults to TRUE.
+#' @param searchCategory Should the substances listed in \code{...} be searched
+#'   for in column \code{category}? Defaults to TRUE.
 #' @param searchSynonym Should the substances listed in \code{...} be searched
 #'   for in column \code{synonym}? Defaults to TRUE.
 #'
-#' @return A lookup table with class \code{data.frame} having three columns:
-#'   drug category, drug class, and drug street name.
+#' @return A lookup table with category \code{data.frame} having four columns:
+#'   original search term, drug class, drug category, and drug street name.
 #' @export
 #'
 #' @examples
 #'   lookup("zip", "shrooms")
 
-lookup <- function(...,
-                   searchCategory = TRUE,
+lookup <- function(drug_vec = NULL, ...,
                    searchClass = TRUE,
+                   searchCategory = TRUE,
                    searchSynonym = TRUE) {
-  # browser()
 
-  # Convert all names to lower case; https://github.com/labouz/DOPE/issues/39
+  thingy <- c(drug_vec, as.character(list(...)))
   thingy_char <- vapply(
-    X = as.character(list(...)),
+    X = as.character(thingy),
     FUN = tolower,
     FUN.VALUE = character(1),
-    USE.NAMES = FALSE
-  )
+    USE.NAMES = FALSE)
 
-  # Find rows that match the thingy, but set the base logic to FALSE
-  categoryRowMatches <- classRowMatches <- synonymRowMatches <- FALSE
-  if (searchCategory) {
-    categoryRowMatches <- DOPE::lookup_df$category %in% thingy_char
-  }
-  if (searchClass) {
-    classRowMatches <- DOPE::lookup_df$class %in% thingy_char
-  }
-  if (searchSynonym) {
-    synonymRowMatches <- DOPE::lookup_df$synonym %in% thingy_char
-  }
+  # lookup individual words
 
-  # Combine row match logic (use OR for base FALSE layer)
-  matches_lgl <- categoryRowMatches | classRowMatches | synonymRowMatches
+  answer <- purrr::map_df(thingy_char, .lookup,
+                          searchClass,
+                          searchCategory,
+                          searchSynonym)
 
-  answer <-  DOPE::lookup_df[matches_lgl,, drop = FALSE]
   row.names(answer) <- NULL
   answer
 
+}
+
+# internal function to look a single "word"
+# takes a vector of length one hold the word to lookup and returns a
+#   data frame with all matches plus the original word
+
+.lookup <- function(x,
+                    searchClass,
+                    searchCategory,
+                    searchSynonym) {
+
+  # Find rows that match the thingy, but set the base logic to FALSE
+  classRowMatches <- categoryRowMatches <- synonymRowMatches <- FALSE
+  if (searchClass) {
+    classRowMatches <- DOPE::lookup_df$class %in% x
+  }
+  if (searchCategory) {
+    categoryRowMatches <- DOPE::lookup_df$category %in% x
+  }
+  if (searchSynonym) {
+    synonymRowMatches <- DOPE::lookup_df$synonym %in% x
+  }
+
+  # Combine row match logic (use OR for base FALSE layer)
+  matches_lgl <- classRowMatches | categoryRowMatches | synonymRowMatches
+
+  answer <-  DOPE::lookup_df[matches_lgl,, drop = FALSE]
+
+  if (nrow(answer) == 0){
+    answer <- data.frame(original_word = x, class = NA_character_,  category = NA_character_,
+                         synonym = NA_character_)
+  } else{
+    answer <- data.frame(original_word = x, answer)
+  }
+  answer
 }
