@@ -152,6 +152,27 @@ lookup_df3 <- lookup_df %>%
          category = if_else(category != "mushrooms", str_replace(category, "s$", ""), category)
          )
 
-lookup_df <- lookup_df3
+## -----------------------------------------------------------------------------
+orange_book <-
+  tibble(synonym = c(dea_controlled$substance, dea_controlled$synonym)) %>%
+  mutate(synonym = tolower(synonym)) %>% 
+  distinct() %>% 
+  mutate(
+    difficult = str_count(synonym, "[(]") > 0 | 
+      str_detect(synonym, ",(?=\\S)") |
+      str_detect(synonym, '[-|/|&|,|"| ]')
+  ) %>% 
+  filter(!difficult) %>% 
+  anti_join(lookup_df, by = "synonym") %>% 
+  anti_join(lookup_df, by = c("synonym" = "class")) %>% 
+  anti_join(lookup_df, by = c("synonym" = "category")) %>% 
+  mutate(category = "Unknown",  class = "Unknown") %>% 
+  select(class, category, synonym) 
+  
+    
+lookup_df <- bind_rows(lookup_df3 , orange_book)
+
+
+## -----------------------------------------------------------------------------
 use_data(lookup_df, overwrite = TRUE)
 

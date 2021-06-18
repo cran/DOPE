@@ -25,7 +25,7 @@ Run these two lines of code to install DOPE from GitHub (this requires RTools fo
 
 ``` r
 if (!requireNamespace("devtools")) install.packages("devtools")
-devtools::install_github("labouz/DOPE")
+devtools::install_github("CTN-0094/DOPE")
 ```
 
 ## Examples
@@ -62,3 +62,7 @@ data(drug_df)
 parse(drug_df$textdrug[1:5]) %>%
   lookup()
 ```
+
+
+## Additional Information
+For more information or to see detailed vignettes, please visit <https://ctn-0094.github.io/DOPE/>.
